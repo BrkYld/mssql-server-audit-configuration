@@ -55,3 +55,12 @@ loglamak istenilen veritabanı seçilir. Tüm kullanıcıların izlenebilmesi i�
 Oluşturulan Logları incelemek için :
 - <b>Object Explorer</b> üzerinde <b> Security -> Audits </b> yolu izlenir.
 - <b>Audits</b> nodu üzerine sağ tıklanıp <b>View Audit Logs</b> seçeneği seçilerek loglar incelenebilir, <b>csv</b> , <b>txt</b> ve <b>log</b> formatlarında export edilebilir. 
+- Oluşturulan logların zamanı ile sistem zamanı arasında 3-5 saat arası fark olabilir. Bunun sebebi logların <b>UTC</b> saatine göre oluşturulmasıdır. İstenirse sistem saatine göre log raporu oluşturulabilir. Bunun için Sql komut satırına :
+
+```sql
+SELECT DATEADD(MINUTE, DATEDIFF(MINUTE, GETUTCDATE(), CURRENT_TIMESTAMP), event_time) AS event_time_afterconvert
+    ,getdate() 'Current_system_time'
+    ,*
+FROM fn_get_audit_file('C:\PATH\*', DEFAULT, DEFAULT)
+```
+yazmak yeterlidir.
